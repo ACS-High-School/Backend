@@ -4,7 +4,7 @@ pipeline {
     environment {
         // 환경 변수 설정
         ECR_REPO_URI = "853963783084.dkr.ecr.ap-northeast-2.amazonaws.com/backend"
-        IMAGE_NAME = "Backend"
+        IMAGE_NAME = "backend"
         IMAGE_TAG = "${currentBuild.number}"
         AWS_CREDENTIALS_ID = "AWS_ECR"
         DEPLOYMENT_FILE = "node/deployment.yaml" // 파일 경로 수정
