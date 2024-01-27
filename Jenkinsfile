@@ -7,25 +7,40 @@ pipeline {
         ECR_IMAGE = 'backend'
         AWS_CREDENTIAL_ID = 'AWS_ECR'
     }
+
     stages {
-        stage('Clone Repository'){
-            checkout scm
-        }
-        stage('Docker Build'){
-        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
-            image = docker.build("${ECR_PATH}/${ECR_IMAGE}")
+        stage('Clone Repository') {
+            steps {
+                checkout scm
             }
         }
-        stage('Push to ECR'){
-            docker.withRegistry("https://{ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
-                image.push("v${env.BUILD_NUMBER}")
+
+        stage('Docker Build') {
+            steps {
+                script {
+                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
+                        image = docker.build("${ECR_IMAGE}")
+                    }
+                }
             }
         }
-        stage('CleanUp Images'){
-            sh"""
-            docker rmi ${ECR_PATH}/${ECR_IMAGE}:v$BUILD_NUMBER
-            docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest
-            """
+
+        stage('Push to ECR') {
+            steps {
+                script {
+                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
+                        image.push("${env.BUILD_NUMBER}")
+                        image.push("latest")
+                    }
+                }
+            }
+        }
+
+        stage('CleanUp Images') {
+            steps {
+                sh "docker rmi ${ECR_IMAGE}:${env.BUILD_NUMBER}"
+                sh "docker rmi ${ECR_IMAGE}:latest"
+            }
         }
     }
 }
