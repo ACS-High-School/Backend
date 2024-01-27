@@ -26,8 +26,9 @@ pipeline {
             steps {
                 script {
                     docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
-                        customImage.push()
-                        customImage.push("latest")
+                        // 이미지를 푸시할 때 이미지 이름을 직접 사용
+                    sh "docker push ${ECR_IMAGE}:${env.BUILD_NUMBER}"
+                    sh "docker push ${ECR_IMAGE}:latest"
                     }
                 }
             }
