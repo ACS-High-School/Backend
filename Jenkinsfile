@@ -45,7 +45,7 @@ pipeline {
         stage('image push') {
         // ECR 에 이미지 push
             steps {
-                withDockerRegistry("https://${ECR_REPO_URI}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
+                docker.withDockerRegistry("https://${ECR_REPO_URI}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
                     sh "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                     sh "docker push ${IMAGE_NAME}:latest"
                 }
