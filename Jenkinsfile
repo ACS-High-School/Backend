@@ -27,8 +27,8 @@ pipeline {
             steps {
                 // currentBuild.number = 젠킨스가 제공하는 빌드넘버 변수
                 // oolralra/fast-image:1 같은 형태로 이미지가 만들어 질 것.
-                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ./main"
-                sh "docker build -t ${IMAGE_NAME}:latest ./main"
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "docker build -t ${IMAGE_NAME}:latest ."
             }
        
             post {
