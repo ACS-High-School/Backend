@@ -1,39 +1,32 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_REPO_URI = "853963783084.dkr.ecr.ap-northeast-2.amazonaws.com/backend"
-        IMAGE_TAG = "${env.BUILD_NUMBER}"
-        AWS_CREDENTIALS_ID = "AWS_ECR"
-        PREVIOUS_IMAGE_TAG = "${env.BUILD_NUMBER.toInteger() - 1}" // 이전 이미지의 태그를 현재 태그에서 1을 빼서 설정합니다.
+
+    environment{
+        REGION = 'ap-northeast-2'
+        ECR_PATH = '853963783084.dkr.ecr.ap-northeast-2.amazonaws.com'
+        ECR_IMAGE = 'backend'
+        AWS_CREDENTIAL_ID = 'AWS_ECR'
+
     }
     stages {
-        stage('Checkout') {
-            steps {
-                checkout scm
+        stage('Clone Repository'){
+            checkout scm
+        }
+        stage('Docker Build'){
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+            image = docker.build("${ECR_PATH}/${ECR_IMAGE}")
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    sh "docker build -t ${DOCKER_REPO_URI}:${IMAGE_TAG} ."
-                }
+        stage('Push to ECR'){
+            docker.withRegistry("https://{ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+                image.push("v${env.BUILD_NUMBER}")
             }
         }
-        stage('Push to ECR') {
-            steps {
-                script {
-                    sh "aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin ${DOCKER_REPO_URI}"
-                    sh "docker push ${DOCKER_REPO_URI}:${IMAGE_TAG}"
-                }
-            }
-        }
-        stage('Delete Previous Image') {
-            steps {
-                script {
-                    // 이전 이미지 삭제
-                    sh "docker rmi ${DOCKER_REPO_URI}:${PREVIOUS_IMAGE_TAG}"
-                }
-            }
+        stage('CleanUp Images'){
+            sh"""
+            docker rmi ${ECR_PATH}/${ECR_IMAGE}:v$BUILD_NUMBER
+            docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest
+            """
         }
     }
 }
