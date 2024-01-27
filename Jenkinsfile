@@ -8,38 +8,24 @@ pipeline {
         AWS_CREDENTIAL_ID = 'AWS_ECR'
     }
     stages {
-        stage('Clone Repository') {
-            steps {
-                checkout scm
+        stage('Clone Repository'){
+            checkout scm
+        }
+        stage('Docker Build'){
+        docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+            image = docker.build("${ECR_PATH}/${ECR_IMAGE}")
             }
         }
-        stage('Docker Build') {
-            steps {
-                script {
-                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
-                        def customImage = docker.build("${ECR_IMAGE}:${env.BUILD_NUMBER}")
-                    }
-                }
+        stage('Push to ECR'){
+            docker.withRegistry("https://{ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}"){
+                image.push("v${env.BUILD_NUMBER}")
             }
         }
-        stage('Push to ECR') {
-            steps {
-                script {
-                    docker.withRegistry("https://${ECR_PATH}", "ecr:${REGION}:${AWS_CREDENTIAL_ID}") {
-                        // 이미지를 푸시할 때 이미지 이름을 직접 사용
-                    sh "docker push ${ECR_IMAGE}:${env.BUILD_NUMBER}"
-                    sh "docker push ${ECR_IMAGE}:latest"
-                    }
-                }
-            }
-        }
-        stage('CleanUp Images') {
-            steps {
-                sh"""
-                docker rmi ${ECR_PATH}/${ECR_IMAGE}:${env.BUILD_NUMBER}
-                docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest
-                """
-            }
+        stage('CleanUp Images'){
+            sh"""
+            docker rmi ${ECR_PATH}/${ECR_IMAGE}:v$BUILD_NUMBER
+            docker rmi ${ECR_PATH}/${ECR_IMAGE}:latest
+            """
         }
     }
 }
