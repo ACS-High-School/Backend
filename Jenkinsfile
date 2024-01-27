@@ -21,9 +21,8 @@ pipeline {
                     )
                 }
         }
-    }
 
-    stage('image build') {
+        stage('image build') {
         // 이미지 빌드
             steps {
                 // currentBuild.number = 젠킨스가 제공하는 빌드넘버 변수
@@ -62,5 +61,8 @@ pipeline {
                 }
             }
         }
+    }
+
+    
 }
 
