@@ -50,7 +50,7 @@ pipeline {
                 cleanWs()
             } 
         }
-        
+    }
     post {
         failure {
             echo 'file update failure'
