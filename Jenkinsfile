@@ -22,7 +22,7 @@ pipeline {
                     // src/main/resources 폴더가 없으면 생성
                     sh 'mkdir -p src/main/resources/'
                     sh 'chmod 755 src/main/resources/'
-                    sh 'cp ${application}  src/main/resources/application.yml'
+                    sh 'cp $application  src/main/resources/application.properties'
                 }
             }
         }
