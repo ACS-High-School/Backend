@@ -26,6 +26,12 @@ pipeline {
             }
         }
 
+        stage('Build with Gradle') {
+            steps {
+                sh './gradlew build'
+            }
+        }
+        
         stage('Docker Build') {
             steps {
                 script {
