@@ -20,9 +20,8 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'application_properties', variable: 'application')]) {
                     // src/main/resources 폴더가 없으면 생성
-                    sh 'mkdir -p src/main/resources'
-                    sh 'chmod 755 src/main/resources'
-                    sh 'cp $application  src/main/resources/application.properties'
+                    sh 'sudo mkdir -p src/main/resources'
+                    sh 'sudo cp $application  src/main/resources/application.properties'
                 }
             }
         }
