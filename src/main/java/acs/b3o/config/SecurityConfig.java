@@ -1,5 +1,6 @@
 package acs.b3o.config;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
@@ -52,6 +55,7 @@ public class SecurityConfig {
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
             .oauth2ResourceServer(oauth2 -> oauth2
+                .bearerTokenResolver(customBearerTokenResolver())
                 .jwt(jwt -> jwt.decoder(jwtDecoder()))); // JWT 디코더 설정
         return http.build();
     }
@@ -64,5 +68,25 @@ public class SecurityConfig {
         return jwtDecoder;
         // JWT 디코더 설정을 위한 코드를 여기에 추가하세요.
         // 예를 들어, `NimbusJwtDecoder`를 사용할 수 있습니다.
+    }
+
+    @Bean
+    public BearerTokenResolver customBearerTokenResolver() {
+        return new BearerTokenResolver() {
+            @Override
+            public String resolve(HttpServletRequest request) {
+                // 'accessToken'이라는 이름의 쿠키에서 토큰 추출
+                if (request.getCookies() != null) {
+                    for (Cookie cookie : request.getCookies()) {
+                        if (cookie.getName().contains("accessToken")) {
+                            System.out.println(cookie.getValue());
+                            return cookie.getValue();
+                        }
+                    }
+                }
+                // 쿠키에 accessToken이 없는 경우 null 반환
+                return null;
+            }
+        };
     }
 }
