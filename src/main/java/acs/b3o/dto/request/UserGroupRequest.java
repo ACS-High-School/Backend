@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public class UserGroupRequest {
-    private int groupcode;
+    private int groupCode;
     private String user1;
     private String user2;
     private String user3;

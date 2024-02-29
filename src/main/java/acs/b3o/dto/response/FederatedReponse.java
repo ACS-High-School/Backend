@@ -7,12 +7,12 @@ import lombok.Getter;
 @Getter
 @Builder
 public class FederatedReponse {
-    private String userinput1;
-    private String userinput2;
-    private String userinput3;
-    private String userinput4;
+    private String userInput1;
+    private String userInput2;
+    private String userInput3;
+    private String userInput4;
     private Date date;
     private String model;
     private String status;
-    private int groupcode;
+    private int groupCode;
 }

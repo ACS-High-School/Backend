@@ -31,19 +31,19 @@ public class Federated {
 
     @ManyToOne
     @JoinColumn(name = "userinput1", referencedColumnName = "title")
-    private FLData userinput1; // FLData 엔티티와의 외래 키 관계
+    private FLData userInput1; // FLData 엔티티와의 외래 키 관계
 
     @ManyToOne
     @JoinColumn(name = "userinput2", referencedColumnName = "title")
-    private FLData userinput2; // 동일
+    private FLData userInput2; // 동일
 
     @ManyToOne
     @JoinColumn(name = "userinput3", referencedColumnName = "title")
-    private FLData userinput3; // 동일
+    private FLData userInput3; // 동일
 
     @ManyToOne
     @JoinColumn(name = "userinput4", referencedColumnName = "title")
-    private FLData userinput4; // 동일
+    private FLData userInput4; // 동일
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
@@ -57,5 +57,5 @@ public class Federated {
 
     @ManyToOne
     @JoinColumn(name = "groupcode", referencedColumnName = "groupcode")
-    private UserGroup groupcode; // UserGroup 엔티티와의 외래 키 관계
+    private UserGroup groupCode; // UserGroup 엔티티와의 외래 키 관계
 }

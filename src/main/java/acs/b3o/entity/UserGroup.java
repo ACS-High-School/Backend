@@ -21,7 +21,7 @@ import lombok.Setter;
 public class UserGroup {
 
     @Id
-    private int groupcode; // 그룹 코드, 기본 키로 사용
+    private int groupCode; // 그룹 코드, 기본 키로 사용
 
     @ManyToOne
     @JoinColumn(name = "user1", referencedColumnName = "nickname")
