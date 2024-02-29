@@ -57,5 +57,5 @@ public class Federated {
 
     @ManyToOne
     @JoinColumn(name = "groupcode", referencedColumnName = "groupcode")
-    private UserGroup groupcode; // UserGroup 엔티티와의 외래 키 관
+    private UserGroup groupcode; // UserGroup 엔티티와의 외래 키 관계
 }
