@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class FederatedReponse {
+public class FederatedResponse {
     private String userInput1;
     private String userInput2;
     private String userInput3;
