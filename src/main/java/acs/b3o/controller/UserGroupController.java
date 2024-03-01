@@ -19,9 +19,9 @@ public class UserGroupController {
     private UserGroupService userGroupService; // 서비스 계층 주입
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUserGroup(@RequestBody UserGroupRequest userGroupRequest, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<?> createUserGroup(@RequestBody UserGroupRequest userGroupRequest, @AuthenticationPrincipal String username) {
         // 서비스 메서드 호출
-        userGroupService.createUserGroup(userGroupRequest);
+        userGroupService.createUserGroup(userGroupRequest ,username);
         return ResponseEntity.ok().build();
     }
 }
