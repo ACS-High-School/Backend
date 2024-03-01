@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name="book")
+@Table(name="user")
 @Getter
 @Setter
 @Builder
@@ -35,5 +35,4 @@ public class User {
 
     @Column(length = 20)
     private String company; // 소속, null 허용
-
 }
