@@ -1,6 +1,9 @@
 package acs.b3o.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -21,6 +24,7 @@ import lombok.Setter;
 public class UserGroup {
 
     @Id
+    @Column(name = "groupcode")
     private int groupCode; // 그룹 코드, 기본 키로 사용
 
     @ManyToOne
