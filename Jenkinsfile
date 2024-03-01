@@ -16,6 +16,23 @@ pipeline {
             }
         }
 
+        stage('Add Env') {
+            steps {
+                withCredentials([file(credentialsId: 'application_properties', variable: 'application')]) {
+                    // src/main/resources 폴더가 없으면 생성
+                    sh 'sudo mkdir -p src/main/resources'
+                    sh 'sudo cp $application  src/main/resources/application.properties'
+                    sh 'sudo chmod 664 src/main/resources/application.properties'
+                }
+            }
+        }
+
+        stage('Build with Gradle') {
+            steps {
+                sh './gradlew clean build'
+            }
+        }
+        
         stage('Docker Build') {
             steps {
                 script {
@@ -48,7 +65,7 @@ pipeline {
             steps {
                 sh "docker system prune -af"
                 cleanWs()
-            } 
+            }
         }
     }
     post {

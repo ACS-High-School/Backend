@@ -5,7 +5,7 @@ FROM amazoncorretto:17
 EXPOSE 8080
 
 # 앱의 jar 파일 추가
-COPY build/libs/demo-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/b3o-0.0.1-SNAPSHOT.jar app.jar
 
 # jar 파일 실행
 ENTRYPOINT ["java", "-jar", "/app.jar"]
