@@ -30,8 +30,11 @@ public class UserGroupController {
 
         // 서비스 계층에서 처리된 결과에 따라 적절한 HTTP 응답 반환
         if (response.getMessage().equals("이 그룹은 이미 가득 찼습니다.")) {
-            // 409 Conflict 상태 코드 사용 (혹은 다른 적절한 상태 코드 선택 가능)
+            // 그룹이 가득 찼을 경우 409 Conflict 상태 코드 반환
             return ResponseEntity.status(409).body(response);
+        } else if (response.getMessage().equals("해당 그룹 코드에 해당하는 그룹이 없습니다.")) {
+            // 그룹 코드에 해당하는 그룹이 없을 경우 404 Not Found 상태 코드 반환
+            return ResponseEntity.status(404).body(response);
         } else {
             // 성공적으로 추가된 경우 200 OK 상태 코드 사용
             return ResponseEntity.ok(response);

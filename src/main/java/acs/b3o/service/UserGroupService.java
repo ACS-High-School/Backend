@@ -40,6 +40,14 @@ public class UserGroupService {
 
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
 
+        // 그룹을 찾지 못한 경우 처리
+        if (userGroup == null) {
+            return UserGroupResponse.builder()
+                .groupCode(userGroupRequest.getGroupCode())
+                .message("해당 그룹 코드에 해당하는 그룹이 없습니다.")
+                .build();
+        }
+
         String message;
 
         if (userGroup.getUser2() == null) {
