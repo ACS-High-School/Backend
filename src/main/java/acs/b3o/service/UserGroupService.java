@@ -39,7 +39,25 @@ public class UserGroupService {
         User user = userRepository.findByNickname(username);
 
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
+        String message;
 
+        // 이미 그룹에 가입된 유저인지 확인
+        boolean isUserAlreadyInGroup = user.equals(userGroup.getUser1()) ||
+            user.equals(userGroup.getUser2()) ||
+            user.equals(userGroup.getUser3()) ||
+            user.equals(userGroup.getUser4());
+
+        if (isUserAlreadyInGroup) {
+            // 이미 가입된 유저인 경우 메시지 설정
+            return UserGroupResponse.builder()
+                .groupCode(userGroupRequest.getGroupCode())
+                .user1(userGroup.getUser1() != null ? userGroup.getUser1().getNickname() : null)
+                .user2(userGroup.getUser2() != null ? userGroup.getUser2().getNickname() : null)
+                .user3(userGroup.getUser3() != null ? userGroup.getUser3().getNickname() : null)
+                .user4(userGroup.getUser4() != null ? userGroup.getUser4().getNickname() : null)
+                .message("이미 그룹의 멤버입니다.")
+                .build();
+        }
         // 그룹을 찾지 못한 경우 처리
         if (userGroup == null) {
             return UserGroupResponse.builder()
@@ -48,7 +66,6 @@ public class UserGroupService {
                 .build();
         }
 
-        String message;
 
         if (userGroup.getUser2() == null) {
             userGroup.setUser2(user);
