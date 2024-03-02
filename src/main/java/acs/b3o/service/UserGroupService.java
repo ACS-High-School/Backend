@@ -29,65 +29,52 @@ public class UserGroupService {
 
         userGroupRepository.save(userGroup);
 
-        return UserGroupResponse.builder()
-            .groupCode(userGroupRequest.getGroupCode())
-            .user1(username)
-            .build();
+        return buildResponse(userGroup, "그룹이 생성되었습니다.");
     }
 
     public UserGroupResponse joinUserGroup(UserGroupRequest userGroupRequest, String username) {
         User user = userRepository.findByNickname(username);
-
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
-        String message;
 
-        // 이미 그룹에 가입된 유저인지 확인
-        boolean isUserAlreadyInGroup = user.equals(userGroup.getUser1()) ||
-            user.equals(userGroup.getUser2()) ||
-            user.equals(userGroup.getUser3()) ||
-            user.equals(userGroup.getUser4());
-
-        if (isUserAlreadyInGroup) {
-            // 이미 가입된 유저인 경우 메시지 설정
-            return UserGroupResponse.builder()
-                .groupCode(userGroupRequest.getGroupCode())
-                .user1(userGroup.getUser1() != null ? userGroup.getUser1().getNickname() : null)
-                .user2(userGroup.getUser2() != null ? userGroup.getUser2().getNickname() : null)
-                .user3(userGroup.getUser3() != null ? userGroup.getUser3().getNickname() : null)
-                .user4(userGroup.getUser4() != null ? userGroup.getUser4().getNickname() : null)
-                .message("이미 그룹의 멤버입니다.")
-                .build();
-        }
-        // 그룹을 찾지 못한 경우 처리
         if (userGroup == null) {
-            return UserGroupResponse.builder()
-                .groupCode(userGroupRequest.getGroupCode())
-                .message("해당 그룹 코드에 해당하는 그룹이 없습니다.")
-                .build();
+            return buildResponse(null, "해당 그룹 코드에 해당하는 그룹이 없습니다.");
         }
 
-
-        if (userGroup.getUser2() == null) {
-            userGroup.setUser2(user);
-            message = "사용자가 그룹에 성공적으로 추가되었습니다.";
-        } else if (userGroup.getUser3() == null) {
-            userGroup.setUser3(user);
-            message = "사용자가 그룹에 성공적으로 추가되었습니다.";
-        } else if (userGroup.getUser4() == null) {
-            userGroup.setUser4(user);
-            message = "사용자가 그룹에 성공적으로 추가되었습니다.";
-        } else {
-            message = "이 그룹은 이미 가득 찼습니다.";
+        if (isUserInGroup(user, userGroup)) {
+            return buildResponse(userGroup, "이미 그룹의 멤버입니다.");
         }
 
+        String message = addUserToGroup(user, userGroup);
         userGroupRepository.save(userGroup);
 
+        return buildResponse(userGroup, message);
+    }
+
+    private boolean isUserInGroup(User user, UserGroup userGroup) {
+        return user.equals(userGroup.getUser1()) || user.equals(userGroup.getUser2()) ||
+            user.equals(userGroup.getUser3()) || user.equals(userGroup.getUser4());
+    }
+
+    private String addUserToGroup(User user, UserGroup userGroup) {
+        if (userGroup.getUser2() == null) {
+            userGroup.setUser2(user);
+        } else if (userGroup.getUser3() == null) {
+            userGroup.setUser3(user);
+        } else if (userGroup.getUser4() == null) {
+            userGroup.setUser4(user);
+        } else {
+            return "이 그룹은 이미 가득 찼습니다.";
+        }
+        return "사용자가 그룹에 성공적으로 추가되었습니다.";
+    }
+
+    private UserGroupResponse buildResponse(UserGroup userGroup, String message) {
         return UserGroupResponse.builder()
-            .groupCode(userGroupRequest.getGroupCode())
-            .user1(userGroup.getUser1() != null ? userGroup.getUser1().getNickname() : null)
-            .user2(userGroup.getUser2() != null ? userGroup.getUser2().getNickname() : null)
-            .user3(userGroup.getUser3() != null ? userGroup.getUser3().getNickname() : null)
-            .user4(userGroup.getUser4() != null ? userGroup.getUser4().getNickname() : null)
+            .groupCode(userGroup != null ? userGroup.getGroupCode() : null)
+            .user1(userGroup != null && userGroup.getUser1() != null ? userGroup.getUser1().getNickname() : null)
+            .user2(userGroup != null && userGroup.getUser2() != null ? userGroup.getUser2().getNickname() : null)
+            .user3(userGroup != null && userGroup.getUser3() != null ? userGroup.getUser3().getNickname() : null)
+            .user4(userGroup != null && userGroup.getUser4() != null ? userGroup.getUser4().getNickname() : null)
             .message(message)
             .build();
     }
