@@ -11,4 +11,6 @@ public class UserGroupResponse {
     private String user2;
     private String user3;
     private String user4;
+
+    private String message;
 }

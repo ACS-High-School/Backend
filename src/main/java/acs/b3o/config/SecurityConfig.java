@@ -1,16 +1,23 @@
 package acs.b3o.config;
 
+import org.springframework.core.convert.converter.Converter;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collection;
 import java.util.Collections;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -49,8 +56,9 @@ public class SecurityConfig {
                     .anyRequest().authenticated() // 그 외 모든 요청은 인증 필요
             )
             .oauth2ResourceServer(oauth2 -> oauth2
-                .bearerTokenResolver(customBearerTokenResolver())
-                .jwt(jwt -> jwt.decoder(jwtDecoder()))); // JWT 디코더 설정
+            .bearerTokenResolver(customBearerTokenResolver())
+            .jwt(jwt -> jwt.decoder(jwtDecoder())
+                .jwtAuthenticationConverter(jwtAuthenticationConverter()))); // JWT 인증 컨버터 설정);
         return http.build();
     }
 
@@ -92,4 +100,14 @@ public class SecurityConfig {
             }
         };
     }
+
+    public Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter() {
+        return jwt -> {
+            String username = jwt.getClaimAsString("username"); // 'sub' 클레임에서 사용자 이름 추출
+            System.out.println(username);
+            Collection<GrantedAuthority> authorities = Collections.emptyList(); // 권한 설정
+            return new UsernamePasswordAuthenticationToken(username, null, authorities);
+        };
+    }
+
 }
