@@ -11,7 +11,7 @@ public class GroupStatusService {
     @Autowired
     private GroupStatusRepository repository;
 
-    public void confirmUpload(Integer groupCode) {
+    public void confirmUpload(int groupCode) {
         GroupStatus groupStatus = repository.findById(groupCode)
             .orElseThrow(() -> new RuntimeException("Group not found"));
         groupStatus.setUser1Confirmed(true); // 예시로 user1Confirmed만 업데이트. 실제 로직에 맞게 조정 필요
