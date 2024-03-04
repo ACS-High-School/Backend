@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@Tag(name=" S3 컨트롤러", description = "s3 api")
+@Tag(name = " S3 컨트롤러", description = "s3 api")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/inference")
+@RequestMapping("/s3")
 public class S3Controller {
 
   private final S3Service awsS3Service;
@@ -28,12 +28,12 @@ public class S3Controller {
   public ResponseEntity<List<String>> uploadFile(
       @RequestParam("multipartFiles") List<MultipartFile> multipartFiles,
       @RequestParam("subFolderPath") String subFolderPath,
-      @RequestParam("taskTitle") String taskTitle){
+      @RequestParam("taskTitle") String taskTitle) {
     return ResponseEntity.ok(awsS3Service.uploadFile(multipartFiles, subFolderPath, taskTitle));
   }
 
   @Operation(summary = "파일 다운로드", description = "s3 파일을 다운로드 합니다.")
-  @GetMapping ("/getFile")
+  @GetMapping("/getFile")
   public ResponseEntity<byte[]> download() throws IOException {
     return awsS3Service.getFile("data/raw-data/test_data.csv");
   }
