@@ -1,5 +1,6 @@
 package acs.b3o.dto.request;
 
+import acs.b3o.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -18,5 +19,5 @@ public class InferenceRequest {
   private String result;
   private String stats;
   private Date date;
-  private String nickname; // 닉네임, 기본 키로 사용
+  private User user;
 }

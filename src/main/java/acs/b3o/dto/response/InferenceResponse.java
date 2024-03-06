@@ -1,5 +1,6 @@
 package acs.b3o.dto.response;
 
+import acs.b3o.entity.User;
 import java.util.Date;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ public class InferenceResponse {
   private String result;
   private String stats;
   private Date date;
-  private String nickname; // 닉네임, 기본 키로 사용
+  private User user;
 
   private String message;
 }
