@@ -30,30 +30,29 @@ public class Inference {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer _id;
 
-  @Column(nullable = false, length = 25)
-  private String model;
+  @Column(length = 48, nullable = false)
+  private String title; // 제목
 
-  @Column(nullable = false, length = 25)
-  private String title;
+  @Column(length = 25, nullable = false)
+  private String model; // 학습 모델
 
-  @Column(nullable = false, length = 512)
-  private String input1;
+  @Column(length = 512, nullable = false)
+  private String input1; // 학습 데이터 1
 
-  @Column(nullable = false, length = 512)
-  private String input2;
+  @Column(length = 512, nullable = false)
+  private String input2; // 학습 데이터 2
 
   @Column(length = 512)
-  private String result;
+  private String result; // 학습 결과
 
   @Column(length = 20)
-  private String stats;
+  private String stats; // 진행 상태
 
   @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
-  private Date date;
+  private Date date; // 학습 날짜
 
   @ManyToOne
-  @JoinColumn(name = "nickname", referencedColumnName = "nickname")
-  private User nickname; // 닉네임, 기본 키로 사용
-
+  @JoinColumn(name = "username", referencedColumnName = "username")
+  private User user; // 학습 진행자
 }
