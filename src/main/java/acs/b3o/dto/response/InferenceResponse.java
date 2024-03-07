@@ -11,8 +11,7 @@ public class InferenceResponse {
 
   private String model;
   private String title;
-  private String input1;
-  private String input2;
+  private String input;
   private String result;
   private String stats;
   private Date date;

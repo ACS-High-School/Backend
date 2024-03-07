@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InferenceRepository extends JpaRepository<Inference, Integer> {
 
-  List<Inference> findAllByNickname(User user);
+  List<Inference> findAllByUser(User user);
 }

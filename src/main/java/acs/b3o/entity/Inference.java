@@ -36,11 +36,8 @@ public class Inference {
   @Column(length = 25, nullable = false)
   private String model; // 학습 모델
 
-  @Column(length = 512, nullable = false)
-  private String input1; // 학습 데이터 1
-
-  @Column(length = 512, nullable = false)
-  private String input2; // 학습 데이터 2
+  @Column(length = 24, nullable = false)
+  private String input; // 학습 데이터
 
   @Column(length = 512)
   private String result; // 학습 결과
