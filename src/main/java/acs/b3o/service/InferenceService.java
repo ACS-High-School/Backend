@@ -24,7 +24,7 @@ public class InferenceService {
   private UserRepository userRepository;
 
   public InferenceResponse createInference(String model, String title, String username) {
-    User user = userRepository.findByNickname(username);
+    User user = userRepository.findByUsername(username);
 
     Inference inference = new Inference();
     inference.setModel(model);
@@ -33,7 +33,7 @@ public class InferenceService {
     inference.setInput2(title + "_x2");
     inference.setStats("start");
     inference.setDate(new Date());
-    inference.setNickname(user);
+    inference.setUser(user);
 
     inferenceRepository.save(inference);
 
@@ -41,7 +41,7 @@ public class InferenceService {
   }
 
   public List<InferenceResponse> getAllInferenceResults(String username) {
-    User user = userRepository.findByNickname(username);
+    User user = userRepository.findByUsername(username);
     List<Inference> inferences = inferenceRepository.findAllByNickname(user);
 
     return inferences.stream().map(inference ->
@@ -65,7 +65,7 @@ public class InferenceService {
         .input2(inference.getInput2())
         .date(inference.getDate())
         .stats(inference.getStats())
-        .nickname(inference.getNickname().getNickname())
+        .user(inference.getUser())
         .message(message)
         .build();
   }
