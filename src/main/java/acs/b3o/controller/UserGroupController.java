@@ -40,4 +40,11 @@ public class UserGroupController {
             return ResponseEntity.ok(response);
         }
     }
+
+    @PostMapping("/users")
+    public ResponseEntity<UserGroupResponse> getUsers(@RequestBody UserGroupRequest userGroupRequest) {
+        UserGroupResponse response = userGroupService.getUsers(userGroupRequest);
+
+        return ResponseEntity.ok(response);
+    }
 }

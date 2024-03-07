@@ -50,6 +50,24 @@ public class UserGroupService {
         return buildResponse(userGroup, message);
     }
 
+    public UserGroupResponse getUsers(UserGroupRequest userGroupRequest) {
+        UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
+
+        if (userGroup == null) {
+            return buildResponse(null, "해당 그룹 코드에 해당하는 그룹이 없습니다.");
+        }
+
+        // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
+        return UserGroupResponse.builder()
+            .groupCode(userGroup.getGroupCode())
+            .user1(userGroup.getUser1().getNickname())
+            .user2(userGroup.getUser2().getNickname())
+            .user3(userGroup.getUser3().getNickname())
+            .user4(userGroup.getUser4().getNickname())
+            .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
+            .build();
+    }
+
     private boolean isUserInGroup(User user, UserGroup userGroup) {
         return user.equals(userGroup.getUser1()) || user.equals(userGroup.getUser2()) ||
             user.equals(userGroup.getUser3()) || user.equals(userGroup.getUser4());
