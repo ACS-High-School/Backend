@@ -24,16 +24,15 @@ public class InferenceService {
   private UserRepository userRepository;
 
   public InferenceResponse createInference(String model, String title, String username) {
-    User user = userRepository.findByNickname(username);
+    User user = userRepository.findByUsername(username);
 
     Inference inference = new Inference();
     inference.setModel(model);
     inference.setTitle(title);
-    inference.setInput1(title + "_x1");
-    inference.setInput2(title + "_x2");
+    inference.setInput(title + "_x1");
     inference.setStats("start");
     inference.setDate(new Date());
-    inference.setNickname(user);
+    inference.setUser(user);
 
     inferenceRepository.save(inference);
 
@@ -41,18 +40,18 @@ public class InferenceService {
   }
 
   public List<InferenceResponse> getAllInferenceResults(String username) {
-    User user = userRepository.findByNickname(username);
-    List<Inference> inferences = inferenceRepository.findAllByNickname(user);
+    User user = userRepository.findByUsername(username);
+    List<Inference> inferences = inferenceRepository.findAllByUser(user);
 
     return inferences.stream().map(inference ->
         InferenceResponse.builder()
             .model(inference.getModel())
             .title(inference.getTitle())
-            .input1(inference.getInput1())
-            .input2(inference.getInput2())
             .result(inference.getResult())
+            .input(inference.getInput())
             .stats(inference.getStats())
             .date(inference.getDate())
+            .user(inference.getUser())
             .build()
     ).collect(Collectors.toList());
   }
@@ -61,11 +60,10 @@ public class InferenceService {
     return InferenceResponse.builder()
         .model(inference.getModel())
         .title(inference.getTitle())
-        .input1(inference.getInput1())
-        .input2(inference.getInput2())
         .date(inference.getDate())
+        .input(inference.getInput())
         .stats(inference.getStats())
-        .nickname(inference.getNickname().getNickname())
+        .user(inference.getUser())
         .message(message)
         .build();
   }

@@ -16,14 +16,15 @@ public class UserService {
   private UserRepository userRepository;
 
   // Retrieve user information by email
-  public User getUserInfo(String nickName) {
-    return userRepository.findByNickname(nickName);
+  public User getUserInfo(String userName) {
+    return userRepository.findByUsername(userName);
   }
 
-  public boolean updateUserName(String nickName, String newName) {
-    User user = userRepository.findByNickname(nickName);
+  // Username 업데이트
+  public boolean updateUserNickname(String userName, String newUsername) {
+    User user = userRepository.findByUsername(userName);
     if (user != null) {
-      user.setName(newName);
+      user.setUsername(newUsername);
       userRepository.save(user);
       return true;
     }
@@ -31,8 +32,8 @@ public class UserService {
   }
 
   // 회사명 업데이트
-  public boolean updateUserCompany(String nickName, String newCompany) {
-    User user = userRepository.findByNickname(nickName);
+  public boolean updateUserCompany(String userName, String newCompany) {
+    User user = userRepository.findByUsername(userName);
     if (user != null) {
       user.setCompany(newCompany);
       userRepository.save(user);
@@ -41,14 +42,5 @@ public class UserService {
     return false;
   }
 
-  // 닉네임 업데이트
-  public boolean updateUserNickname(String nickName, String newNickname) {
-    User user = userRepository.findByNickname(nickName);
-    if (user != null) {
-      user.setNickname(newNickname);
-      userRepository.save(user);
-      return true;
-    }
-    return false;
-  }
+
 }

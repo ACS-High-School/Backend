@@ -28,11 +28,12 @@ public class UserController {
     return ResponseEntity.notFound().build();
   }
 
-  // Update the authenticated user's name
-  @PutMapping("/name")
-  public ResponseEntity<Void> updateUserName(@AuthenticationPrincipal String nickname,
-      @RequestBody String newName) {
-    boolean updated = userService.updateUserName(nickname, newName);
+  // This endpoint might need a different approach since it changes the username/nickname,
+  // which is also used for authentication. Consider the implications and handle accordingly.
+  @PutMapping("/username")
+  public ResponseEntity<Void> updateUsername(@AuthenticationPrincipal String oldUsername,
+      @RequestBody String newUsername) {
+    boolean updated = userService.updateUserNickname(oldUsername, newUsername);
     if (updated) {
       return ResponseEntity.ok().build();
     }
@@ -41,24 +42,14 @@ public class UserController {
 
   // Update the authenticated user's company
   @PutMapping("/company")
-  public ResponseEntity<Void> updateUserCompany(@AuthenticationPrincipal String nickname,
+  public ResponseEntity<Void> updateUserCompany(@AuthenticationPrincipal String username,
       @RequestBody String newCompany) {
-    boolean updated = userService.updateUserCompany(nickname, newCompany);
+    boolean updated = userService.updateUserCompany(username, newCompany);
     if (updated) {
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.notFound().build();
   }
 
-  // This endpoint might need a different approach since it changes the username/nickname,
-  // which is also used for authentication. Consider the implications and handle accordingly.
-  @PutMapping("/nickname")
-  public ResponseEntity<Void> updateUserNickname(@AuthenticationPrincipal String oldNickname,
-      @RequestBody String newNickname) {
-    boolean updated = userService.updateUserNickname(oldNickname, newNickname);
-    if (updated) {
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.notFound().build();
-  }
+
 }

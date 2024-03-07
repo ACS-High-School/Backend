@@ -21,7 +21,7 @@ public class UserGroupService {
     private UserRepository userRepository;
 
     public UserGroupResponse createUserGroup(UserGroupRequest userGroupRequest, String username) {
-        User user = userRepository.findByNickname(username);
+        User user = userRepository.findByUsername(username);
 
         UserGroup userGroup = new UserGroup();
         userGroup.setGroupCode(userGroupRequest.getGroupCode());
@@ -33,7 +33,7 @@ public class UserGroupService {
     }
 
     public UserGroupResponse joinUserGroup(UserGroupRequest userGroupRequest, String username) {
-        User user = userRepository.findByNickname(username);
+        User user = userRepository.findByUsername(username);
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
 
         if (userGroup == null) {
@@ -89,10 +89,10 @@ public class UserGroupService {
     private UserGroupResponse buildResponse(UserGroup userGroup, String message) {
         return UserGroupResponse.builder()
             .groupCode(userGroup != null ? userGroup.getGroupCode() : null)
-            .user1(userGroup != null && userGroup.getUser1() != null ? userGroup.getUser1().getNickname() : null)
-            .user2(userGroup != null && userGroup.getUser2() != null ? userGroup.getUser2().getNickname() : null)
-            .user3(userGroup != null && userGroup.getUser3() != null ? userGroup.getUser3().getNickname() : null)
-            .user4(userGroup != null && userGroup.getUser4() != null ? userGroup.getUser4().getNickname() : null)
+            .user1(userGroup != null && userGroup.getUser1() != null ? userGroup.getUser1().getUsername() : null)
+            .user2(userGroup != null && userGroup.getUser2() != null ? userGroup.getUser2().getUsername() : null)
+            .user3(userGroup != null && userGroup.getUser3() != null ? userGroup.getUser3().getUsername() : null)
+            .user4(userGroup != null && userGroup.getUser4() != null ? userGroup.getUser4().getUsername() : null)
             .message(message)
             .build();
     }
