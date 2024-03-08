@@ -20,12 +20,13 @@ import lombok.Setter;
 public class User {
 
     @Id
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String username; // 사용자명, 기본 키로 사용
 
     @Column(length = 40, nullable = false, unique = true)
     private String email; // ID (이메일), 유니크 제약 조건 추가
 
-    @Column(length = 20)
+    @Column(name = "company", length = 20)
     private String company; // 소속, null 허용
+
 }
