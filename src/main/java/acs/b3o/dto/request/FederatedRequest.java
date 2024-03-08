@@ -1,16 +1,17 @@
 package acs.b3o.dto.request;
 
-import java.util.Date;
 import lombok.Getter;
+import java.util.Date;
 
 @Getter
 public class FederatedRequest {
-    private String userInput1;
-    private String userInput2;
-    private String userInput3;
-    private String userInput4;
     private Date date;
+    private String description;
     private String model;
     private String status;
     private int groupCode;
+    private String user1Status;
+    private String user2Status;
+    private String user3Status;
+    private String user4Status;
 }
