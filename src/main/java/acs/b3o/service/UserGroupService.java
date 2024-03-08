@@ -60,10 +60,10 @@ public class UserGroupService {
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
         return UserGroupResponse.builder()
             .groupCode(userGroup.getGroupCode())
-            .user1(userGroup.getUser1().getNickname())
-            .user2(userGroup.getUser2().getNickname())
-            .user3(userGroup.getUser3().getNickname())
-            .user4(userGroup.getUser4().getNickname())
+            .user1(userGroup.getUser1().getUsername())
+            .user2(userGroup.getUser2().getUsername())
+            .user3(userGroup.getUser3().getUsername())
+            .user4(userGroup.getUser4().getUsername())
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .build();
     }
