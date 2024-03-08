@@ -2,8 +2,10 @@ package acs.b3o.dto.request;
 
 import lombok.Getter;
 import java.util.Date;
+import lombok.Setter;
 
 @Getter
+@Setter
 public class FederatedRequest {
     private Date date;
     private String description;
