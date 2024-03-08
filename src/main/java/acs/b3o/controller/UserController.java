@@ -28,17 +28,6 @@ public class UserController {
     return ResponseEntity.notFound().build();
   }
 
-  // This endpoint might need a different approach since it changes the username/nickname,
-  // which is also used for authentication. Consider the implications and handle accordingly.
-  @PutMapping("/username")
-  public ResponseEntity<Void> updateUsername(@AuthenticationPrincipal String oldUsername,
-      @RequestBody String newUsername) {
-    boolean updated = userService.updateUserNickname(oldUsername, newUsername);
-    if (updated) {
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.notFound().build();
-  }
 
   // Update the authenticated user's company
   @PutMapping("/company")

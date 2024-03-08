@@ -1,5 +1,6 @@
 package acs.b3o.entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,20 +11,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "group_status")
+@Table(name = "model")
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GroupStatus {
+public class Model {
+
     @Id
-    private Integer groupCode;
+    @Column(length = 20, nullable = false)
+    private String name; // 사용할 모델
 
-    private Boolean user1Confirmed;
-    private Boolean user2Confirmed;
-    private Boolean user3Confirmed;
-    private Boolean user4Confirmed;
-
-    // Getters and Setters
 }

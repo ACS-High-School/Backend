@@ -60,10 +60,10 @@ public class UserGroupService {
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
         return UserGroupResponse.builder()
             .groupCode(userGroup.getGroupCode())
-            .user1(userGroup.getUser1().getNickname())
-            .user2(userGroup.getUser2().getNickname())
-            .user3(userGroup.getUser3().getNickname())
-            .user4(userGroup.getUser4().getNickname())
+            .user1(userGroup.getUser1())
+            .user2(userGroup.getUser2())
+            .user3(userGroup.getUser3())
+            .user4(userGroup.getUser4())
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .build();
     }
@@ -89,10 +89,10 @@ public class UserGroupService {
     private UserGroupResponse buildResponse(UserGroup userGroup, String message) {
         return UserGroupResponse.builder()
             .groupCode(userGroup != null ? userGroup.getGroupCode() : null)
-            .user1(userGroup != null && userGroup.getUser1() != null ? userGroup.getUser1().getUsername() : null)
-            .user2(userGroup != null && userGroup.getUser2() != null ? userGroup.getUser2().getUsername() : null)
-            .user3(userGroup != null && userGroup.getUser3() != null ? userGroup.getUser3().getUsername() : null)
-            .user4(userGroup != null && userGroup.getUser4() != null ? userGroup.getUser4().getUsername() : null)
+            .user1(userGroup != null && userGroup.getUser1() != null ? userGroup.getUser1() : null)
+            .user2(userGroup != null && userGroup.getUser2() != null ? userGroup.getUser2() : null)
+            .user3(userGroup != null && userGroup.getUser3() != null ? userGroup.getUser3() : null)
+            .user4(userGroup != null && userGroup.getUser4() != null ? userGroup.getUser4() : null)
             .message(message)
             .build();
     }

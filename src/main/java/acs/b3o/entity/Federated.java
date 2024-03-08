@@ -29,28 +29,15 @@ public class Federated {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int _id; // 자동 증가되는 기본 키
 
-    @ManyToOne
-    @JoinColumn(name = "userinput1", referencedColumnName = "title")
-    private FLData userInput1; // FLData 엔티티와의 외래 키 관계
-
-    @ManyToOne
-    @JoinColumn(name = "userinput2", referencedColumnName = "title")
-    private FLData userInput2; // 동일
-
-    @ManyToOne
-    @JoinColumn(name = "userinput3", referencedColumnName = "title")
-    private FLData userInput3; // 동일
-
-    @ManyToOne
-    @JoinColumn(name = "userinput4", referencedColumnName = "title")
-    private FLData userInput4; // 동일
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date date; // 학습 날짜
 
-    @Column(length = 25)
-    private String model; // 학습 결과
+    @Column(name = "description", length = 128, nullable = false) // "description" 컬럼 추가
+    private String description; // FL 그룹 설명
+
+    @Column(length = 20)
+    private String model; // FL 결과
 
     @Column(length = 20)
     private String status; // 진행 상태
@@ -58,4 +45,17 @@ public class Federated {
     @ManyToOne
     @JoinColumn(name = "groupcode", referencedColumnName = "groupcode")
     private UserGroup groupCode; // UserGroup 엔티티와의 외래 키 관계
+
+    // 아래는 추가된 사용자 상태 컬럼에 대한 선언
+    @Column(name = "user1status", length = 20, nullable = false)
+    private String user1Status; // 사용자1 상태
+
+    @Column(name = "user2status", length = 20, nullable = false)
+    private String user2Status; // 사용자2 상태
+
+    @Column(name = "user3status", length = 20, nullable = false)
+    private String user3Status; // 사용자3 상태
+
+    @Column(name = "user4status", length = 20, nullable = false)
+    private String user4Status; // 사용자4 상태
 }

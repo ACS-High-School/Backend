@@ -36,17 +36,17 @@ public class Inference {
   @Column(length = 25, nullable = false)
   private String model; // 학습 모델
 
-  @Column(length = 24, nullable = false)
+  @Column(length = 128, nullable = false) // input 컬럼 길이 수정
   private String input; // 학습 데이터
 
-  @Column(length = 512)
+  @Column(length = 128) // result 컬럼 길이 수정
   private String result; // 학습 결과
 
   @Column(length = 20)
-  private String stats; // 진행 상태
+  private String stats; // 학습 진행 상태
 
-  @Column(nullable = false)
   @Temporal(TemporalType.TIMESTAMP)
+  @Column(nullable = false)
   private Date date; // 학습 날짜
 
   @ManyToOne
