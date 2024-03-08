@@ -20,17 +20,6 @@ public class UserService {
     return userRepository.findByUsername(userName);
   }
 
-  // Username 업데이트
-  public boolean updateUserNickname(String userName, String newUsername) {
-    User user = userRepository.findByUsername(userName);
-    if (user != null) {
-      user.setUsername(newUsername);
-      userRepository.save(user);
-      return true;
-    }
-    return false;
-  }
-
   // 회사명 업데이트
   public boolean updateUserCompany(String userName, String newCompany) {
     User user = userRepository.findByUsername(userName);
