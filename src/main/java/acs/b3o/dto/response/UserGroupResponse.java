@@ -12,6 +12,7 @@ public class UserGroupResponse {
     private User user2;
     private User user3;
     private User user4;
+    private User currentUser;
     private String status;
     private String message;
 }
