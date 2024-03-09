@@ -7,8 +7,12 @@ import acs.b3o.entity.UserGroup;
 import acs.b3o.repository.UserGroupRepository;
 import acs.b3o.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import net.minidev.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -19,6 +23,9 @@ public class UserGroupService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Value("${api.gateway.url}")
+    private String apiUrl;
 
     public UserGroupResponse createUserGroup(UserGroupRequest userGroupRequest, String username) {
         User user = userRepository.findByUsername(username);
@@ -59,6 +66,15 @@ public class UserGroupService {
 
         User currentUser = userRepository.findByUsername(username);
 
+        // application.properties에서 가져온 API Gateway URL 사용
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+
+        String fetchedUrl = response.getBody();
+
+        System.out.println(fetchedUrl);
+
+
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
         return UserGroupResponse.builder()
             .groupCode(userGroup.getGroupCode())
@@ -67,6 +83,7 @@ public class UserGroupService {
             .user3(userGroup.getUser3())
             .user4(userGroup.getUser4())
             .currentUser(currentUser)
+            .jupyterLabUrl(fetchedUrl)
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .build();
     }
