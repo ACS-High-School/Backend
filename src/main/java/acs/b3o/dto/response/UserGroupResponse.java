@@ -14,5 +14,6 @@ public class UserGroupResponse {
     private User user4;
     private User currentUser;
     private String status;
+    private String jupyterLabUrl;
     private String message;
 }
