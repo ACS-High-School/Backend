@@ -50,12 +50,14 @@ public class UserGroupService {
         return buildResponse(userGroup, message);
     }
 
-    public UserGroupResponse getUsers(UserGroupRequest userGroupRequest) {
+    public UserGroupResponse getUsers(UserGroupRequest userGroupRequest, String username) {
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
 
         if (userGroup == null) {
             return buildResponse(null, "해당 그룹 코드에 해당하는 그룹이 없습니다.");
         }
+
+        User currentUser = userRepository.findByUsername(username);
 
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
         return UserGroupResponse.builder()
@@ -64,6 +66,7 @@ public class UserGroupService {
             .user2(userGroup.getUser2())
             .user3(userGroup.getUser3())
             .user4(userGroup.getUser4())
+            .currentUser(currentUser)
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .build();
     }
