@@ -7,7 +7,7 @@ import acs.b3o.entity.UserGroup;
 import acs.b3o.repository.UserGroupRepository;
 import acs.b3o.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import net.minidev.json.JSONObject;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -70,7 +70,12 @@ public class UserGroupService {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
 
-        String fetchedUrl = response.getBody();
+        // 응답에서 'body' 항목 추출 및 URL 추출
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+
+        String body = jsonResponse.getString("body");
+        // JSON 형식의 문자열에서 첫번째와 마지막 큰따옴표 제거
+        String fetchedUrl = body.substring(1, body.length() - 1);
 
         System.out.println(fetchedUrl);
 
