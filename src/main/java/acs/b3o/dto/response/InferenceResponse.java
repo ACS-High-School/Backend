@@ -9,7 +9,7 @@ import java.util.Date;
 @Builder
 public class InferenceResponse {
 
-  private int _id;
+  private Integer _id;
   private String model;
   private String title;
   private String input;
