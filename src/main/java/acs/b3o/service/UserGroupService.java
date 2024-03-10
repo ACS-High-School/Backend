@@ -10,6 +10,9 @@ import jakarta.transaction.Transactional;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -66,9 +69,35 @@ public class UserGroupService {
 
         User currentUser = userRepository.findByUsername(username);
 
-        // application.properties에서 가져온 API Gateway URL 사용
+        // 현재 사용자가 몇 번째 유저인지 확인
+        String clientSuffix = ""; // 사용자 번호를 저장할 변수
+        if (username.equals(userGroup.getUser1().getUsername())) {
+            clientSuffix = "01";
+        } else if (username.equals(userGroup.getUser2().getUsername())) {
+            clientSuffix = "02";
+        } else if (username.equals(userGroup.getUser3().getUsername())) {
+            clientSuffix = "03";
+        } else if (username.equals(userGroup.getUser4().getUsername())) {
+            clientSuffix = "04";
+        }
+
+        // fl-client-{suffix} 문자열 생성
+        String spaceNameValue = "fl-client-" + clientSuffix;
+
+        // RestTemplate 준비
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // JSONObject 또는 Map을 사용하여 요청 본문 생성
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("space_name", spaceNameValue);
+
+        // 요청 본문과 헤더를 포함하는 HttpEntity 생성
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestJson.toString(), headers);
+
+        // POST 요청을 보냄
+        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
 
         // 응답에서 'body' 항목 추출 및 URL 추출
         JSONObject jsonResponse = new JSONObject(response.getBody());
