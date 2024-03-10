@@ -8,6 +8,8 @@ import java.util.Date;
 @Getter
 @Builder
 public class InferenceResponse {
+
+  private int _id;
   private String model;
   private String title;
   private String input;
