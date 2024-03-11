@@ -42,8 +42,8 @@ public class UserGroupController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<UserGroupResponse> getUsers(@RequestBody UserGroupRequest userGroupRequest) {
-        UserGroupResponse response = userGroupService.getUsers(userGroupRequest);
+    public ResponseEntity<UserGroupResponse> getUsers(@RequestBody UserGroupRequest userGroupRequest, @AuthenticationPrincipal String username) {
+        UserGroupResponse response = userGroupService.getUsers(userGroupRequest, username);
 
         return ResponseEntity.ok(response);
     }

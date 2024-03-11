@@ -41,6 +41,9 @@ dependencies {
 
 	// mysql
 	implementation 'mysql:mysql-connector-java:8.0.31'
+
+	// JSON
+	implementation 'org.json:json:20210307'
 }
 
 tasks.named('test') {

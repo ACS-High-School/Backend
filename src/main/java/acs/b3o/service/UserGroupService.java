@@ -7,8 +7,15 @@ import acs.b3o.entity.UserGroup;
 import acs.b3o.repository.UserGroupRepository;
 import acs.b3o.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 @Service
 @Transactional
@@ -19,6 +26,9 @@ public class UserGroupService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Value("${api.gateway.url}")
+    private String apiUrl;
 
     public UserGroupResponse createUserGroup(UserGroupRequest userGroupRequest, String username) {
         User user = userRepository.findByUsername(username);
@@ -50,12 +60,54 @@ public class UserGroupService {
         return buildResponse(userGroup, message);
     }
 
-    public UserGroupResponse getUsers(UserGroupRequest userGroupRequest) {
+    public UserGroupResponse getUsers(UserGroupRequest userGroupRequest, String username) {
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
 
         if (userGroup == null) {
             return buildResponse(null, "해당 그룹 코드에 해당하는 그룹이 없습니다.");
         }
+
+        User currentUser = userRepository.findByUsername(username);
+
+        // 현재 사용자가 몇 번째 유저인지 확인
+        String clientSuffix = ""; // 사용자 번호를 저장할 변수
+        if (username.equals(userGroup.getUser1().getUsername())) {
+            clientSuffix = "01";
+        } else if (username.equals(userGroup.getUser2().getUsername())) {
+            clientSuffix = "02";
+        } else if (username.equals(userGroup.getUser3().getUsername())) {
+            clientSuffix = "03";
+        } else if (username.equals(userGroup.getUser4().getUsername())) {
+            clientSuffix = "04";
+        }
+
+        // fl-client-{suffix} 문자열 생성
+        String spaceNameValue = "fl-client-" + clientSuffix;
+
+        // RestTemplate 준비
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // JSONObject 또는 Map을 사용하여 요청 본문 생성
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("space_name", spaceNameValue);
+
+        // 요청 본문과 헤더를 포함하는 HttpEntity 생성
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestJson.toString(), headers);
+
+        // POST 요청을 보냄
+        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class);
+
+        // 응답에서 'body' 항목 추출 및 URL 추출
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+
+        String body = jsonResponse.getString("body");
+        // JSON 형식의 문자열에서 첫번째와 마지막 큰따옴표 제거
+        String fetchedUrl = body.substring(1, body.length() - 1);
+
+        System.out.println(fetchedUrl);
+
 
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
         return UserGroupResponse.builder()
@@ -64,6 +116,8 @@ public class UserGroupService {
             .user2(userGroup.getUser2())
             .user3(userGroup.getUser3())
             .user4(userGroup.getUser4())
+            .currentUser(currentUser)
+            .jupyterLabUrl(fetchedUrl)
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .build();
     }
