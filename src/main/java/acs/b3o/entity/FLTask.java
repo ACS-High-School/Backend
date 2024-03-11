@@ -18,7 +18,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 @Setter
 public class FLTask {
     private String taskName;
-    private String taskID;
+    private String taskId;
     private String roundId;
     private String memberId;
     private String numSamples;
@@ -38,8 +38,8 @@ public class FLTask {
 
     @DynamoDbSortKey
     @DynamoDbAttribute("Task_ID")
-    public String getTaskID() {
-        return taskID;
+    public String getTaskId() {
+        return taskId;
     }
 
     @DynamoDbAttribute("member_ID")
