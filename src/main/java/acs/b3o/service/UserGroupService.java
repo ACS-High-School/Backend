@@ -4,6 +4,7 @@ import acs.b3o.dto.request.UserGroupRequest;
 import acs.b3o.dto.response.UserGroupResponse;
 import acs.b3o.entity.User;
 import acs.b3o.entity.UserGroup;
+import acs.b3o.repository.FLTaskRepository;
 import acs.b3o.repository.UserGroupRepository;
 import acs.b3o.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -29,6 +30,9 @@ public class UserGroupService {
 
     @Value("${api.gateway.url}")
     private String apiUrl;
+
+    @Autowired
+    private FLTaskRepository flTaskRepository;
 
     public UserGroupResponse createUserGroup(UserGroupRequest userGroupRequest, String username) {
         User user = userRepository.findByUsername(username);
@@ -105,6 +109,14 @@ public class UserGroupService {
         String body = jsonResponse.getString("body");
         // JSON 형식의 문자열에서 첫번째와 마지막 큰따옴표 제거
         String fetchedUrl = body.substring(1, body.length() - 1);
+
+        String taskName = "FL-Task-2024-03-07-05-52-59";
+        String taskId = "000100000001";
+
+        String taskID = flTaskRepository.getTaskById(taskName, taskId).getTaskID();
+
+        System.out.println(taskID);
+
 
         System.out.println(fetchedUrl);
 
