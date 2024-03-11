@@ -31,7 +31,7 @@ public class FLTask {
     private String taskToken;
 
     @DynamoDbPartitionKey
-    @DynamoDbAttribute("Task_ID")
+    @DynamoDbAttribute("Task_Name")
     public String getTaskName() {
         return taskName;
     }
