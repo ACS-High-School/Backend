@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class S3Controller {
   private final S3Service awsS3Service;
 
   @Operation(summary = "파일 업로드", description = "s3에 파일을 업로드 합니다.")
-  @PostMapping("/uploadFile")
+  @PostMapping("/upload")
   public ResponseEntity<List<String>> uploadFile(
       @RequestParam("multipartFiles") List<MultipartFile> multipartFiles,
       @RequestParam("subFolderPath") String subFolderPath,
@@ -33,8 +34,11 @@ public class S3Controller {
   }
 
   @Operation(summary = "파일 다운로드", description = "s3 파일을 다운로드 합니다.")
-  @GetMapping("/getFile")
-  public ResponseEntity<byte[]> download() throws IOException {
-    return awsS3Service.getFile("data/raw-data/test_data.csv");
+  @GetMapping("/download")
+  public ResponseEntity<byte[]> downloadFile(
+      @RequestParam("fileName") String fileName,
+      @RequestParam("subFolderPath") String subFolderPath) throws IOException {
+    // awsS3Service의 수정된 getFile 메서드를 호출하여 파일 내용을 가져옴
+    return awsS3Service.downloadFile(fileName, subFolderPath);
   }
 }
