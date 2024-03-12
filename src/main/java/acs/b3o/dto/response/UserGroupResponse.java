@@ -1,8 +1,10 @@
 package acs.b3o.dto.response;
 
+import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
 import acs.b3o.entity.User;
+
 
 @Getter
 @Builder
@@ -16,4 +18,5 @@ public class UserGroupResponse {
     private String status;
     private String jupyterLabUrl;
     private String message;
+    private List<UserTaskStatusResponse> userTasks;
 }

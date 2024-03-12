@@ -44,6 +44,12 @@ dependencies {
 
 	// JSON
 	implementation 'org.json:json:20210307'
+
+	// aws SDK V2
+	implementation platform('software.amazon.awssdk:bom:2.20.85')
+
+	// AWS DynamoDB
+	implementation 'software.amazon.awssdk:dynamodb-enhanced'
 }
 
 tasks.named('test') {

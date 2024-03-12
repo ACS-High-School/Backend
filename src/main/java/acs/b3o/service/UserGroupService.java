@@ -2,11 +2,17 @@ package acs.b3o.service;
 
 import acs.b3o.dto.request.UserGroupRequest;
 import acs.b3o.dto.response.UserGroupResponse;
+import acs.b3o.dto.response.UserTaskStatusResponse;
+import acs.b3o.entity.FLTask;
 import acs.b3o.entity.User;
 import acs.b3o.entity.UserGroup;
+import acs.b3o.repository.FLTaskRepository;
 import acs.b3o.repository.UserGroupRepository;
 import acs.b3o.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,6 +35,9 @@ public class UserGroupService {
 
     @Value("${api.gateway.url}")
     private String apiUrl;
+
+    @Autowired
+    private FLTaskRepository flTaskRepository;
 
     public UserGroupResponse createUserGroup(UserGroupRequest userGroupRequest, String username) {
         User user = userRepository.findByUsername(username);
@@ -106,7 +115,40 @@ public class UserGroupService {
         // JSON 형식의 문자열에서 첫번째와 마지막 큰따옴표 제거
         String fetchedUrl = body.substring(1, body.length() - 1);
 
+        List<UserTaskStatusResponse> userTasks = new ArrayList<>();
+
+        // 각 사용자 객체를 리스트로 관리
+        List<User> users = Arrays.asList(userGroup.getUser1(), userGroup.getUser2(), userGroup.getUser3(), userGroup.getUser4());
+
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            if (user != null) {
+                // 사용자별 고유한 taskId 생성
+                String taskIdSuffix = String.format("000%d00000001", i + 1);
+                String taskName = "FL-Task-2024-03-07-05-52-59"; // 고정된 taskName 사용
+
+                // 데이터베이스에서 Task 정보 조회
+                FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
+                if (flTask != null) {
+                    System.out.println(flTask.getTaskId());
+                    // Task 정보를 바탕으로 UserTaskStatusDTO 객체 생성
+                    // 여기서 taskStatus를 'ready'로 직접 설정합니다.
+                    UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
+                        .username(user.getUsername())
+                        .taskId(flTask.getTaskId())
+                        .taskName(flTask.getTaskName())
+                        .taskStatus("ready") // DTO의 taskStatus를 'ready'로 설정
+                        .build();
+
+                    // 생성된 DTO 객체를 리스트에 추가
+                    userTasks.add(userTaskStatusResponse);
+                }
+            }
+        }
+
+
         System.out.println(fetchedUrl);
+        System.out.println(userTasks);
 
 
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
@@ -118,6 +160,7 @@ public class UserGroupService {
             .user4(userGroup.getUser4())
             .currentUser(currentUser)
             .jupyterLabUrl(fetchedUrl)
+            .userTasks(userTasks)
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .build();
     }
