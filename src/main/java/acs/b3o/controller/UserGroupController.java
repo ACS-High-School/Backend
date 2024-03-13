@@ -47,4 +47,11 @@ public class UserGroupController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/start")
+    public ResponseEntity<UserGroupResponse> start(@RequestBody UserGroupRequest userGroupRequest) {
+        UserGroupResponse response = userGroupService.startStateMachine(userGroupRequest);
+
+        return ResponseEntity.ok(response);
+    }
 }
