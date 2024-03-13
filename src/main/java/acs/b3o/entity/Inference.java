@@ -1,24 +1,13 @@
 package acs.b3o.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import java.util.Date;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
-@Table(name = "inference")
+@Table(name = "inference", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"title", "username"})
+})
 @Getter
 @Setter
 @Builder
@@ -36,10 +25,10 @@ public class Inference {
   @Column(length = 25, nullable = false)
   private String model; // 학습 모델
 
-  @Column(length = 128, nullable = false) // input 컬럼 길이 수정
+  @Column(length = 512, nullable = false)
   private String input; // 학습 데이터
 
-  @Column(length = 128) // result 컬럼 길이 수정
+  @Column(length = 512)
   private String result; // 학습 결과
 
   @Column(length = 20)
