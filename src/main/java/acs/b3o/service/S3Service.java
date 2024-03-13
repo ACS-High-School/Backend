@@ -58,14 +58,13 @@ public class S3Service {
   }
 
 
-  public ResponseEntity<byte[]> downloadFile(String subFolderPath, String storedFileName)
+  public ResponseEntity<byte[]> getObject(String subFolderPath, String storedFileName)
       throws IOException {
-    // subFolderPath가 빈 문자열이 아니고, /로 끝나지 않는 경우 /를 추가
-    String fullPath = subFolderPath.endsWith("/") ? subFolderPath : subFolderPath + "/";
-    // 전체 경로와 파일 이름을 조합
-    fullPath += storedFileName;
+    // 경로 결합
+    String path = (subFolderPath != null && !subFolderPath.trim().isEmpty()) ? subFolderPath + "/"
+        + storedFileName : storedFileName;
 
-    S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, fullPath));
+    S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, path));
     S3ObjectInputStream objectInputStream = o.getObjectContent();
     byte[] bytes = IOUtils.toByteArray(objectInputStream);
 
@@ -77,5 +76,4 @@ public class S3Service {
 
     return new ResponseEntity<>(bytes, httpHeaders, HttpStatus.OK);
   }
-
 }
