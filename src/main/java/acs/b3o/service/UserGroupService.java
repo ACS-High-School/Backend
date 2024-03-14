@@ -171,6 +171,10 @@ public class UserGroupService {
             }
         }
 
+        Federated federated = federatedRepository.findByGroupCode(userGroupRequest.getGroupCode());
+
+        String description = federated.getDescription();
+
 
         System.out.println(fetchedUrl);
         System.out.println(userTasks);
@@ -187,6 +191,7 @@ public class UserGroupService {
             .jupyterLabUrl(fetchedUrl)
             .userTasks(userTasks)
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
+            .description(description)
             .build();
     }
 
