@@ -58,4 +58,7 @@ public class Federated {
 
     @Column(name = "user4status", length = 20, nullable = false)
     private String user4Status; // 사용자4 상태
+
+    @Column(name = "taskname", length = 20)
+    private String taskName; // 사용자4 상태
 }
