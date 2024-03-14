@@ -13,4 +13,6 @@ public class UserGroupRequest {
     private User user3;
     private User user4;
     private String status;
+
+    private String description;
 }
