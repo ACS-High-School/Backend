@@ -36,6 +36,10 @@ public class UserGroupService {
     @Value("${api.gateway.url}")
     private String apiUrl;
 
+    @Value("${stepfunctions.statemachine.arn}")
+    private String stateMachineArn;
+
+
     @Autowired
     private FLTaskRepository flTaskRepository;
 
@@ -181,6 +185,37 @@ public class UserGroupService {
             return "이 그룹은 이미 가득 찼습니다.";
         }
         return "사용자가 그룹에 성공적으로 추가되었습니다.";
+    }
+
+    public UserGroupResponse startStateMachine(UserGroupRequest userGroupRequest) {
+        UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
+
+        String groupCode = String.valueOf(userGroupRequest.getGroupCode());
+        String taskName = "Task_" + groupCode;
+
+        // RestTemplate 준비
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        // JSONObject 또는 Map을 사용하여 요청 본문 생성
+        JSONObject requestJson = new JSONObject();
+        requestJson.put("name", taskName);
+        requestJson.put("stateMachineArn", stateMachineArn);
+
+        // 요청 본문과 헤더를 포함하는 HttpEntity 생성
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestJson.toString(), headers);
+
+        // POST 요청을 보냄
+        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl + "/execute", requestEntity, String.class);
+
+        // 응답에서 'body' 항목 추출 및 URL 추출
+        JSONObject jsonResponse = new JSONObject(response.getBody());
+
+        System.out.println(jsonResponse);
+
+        return buildResponse(userGroup, "연합 학습 시작 완료");
+
     }
 
     private UserGroupResponse buildResponse(UserGroup userGroup, String message) {
