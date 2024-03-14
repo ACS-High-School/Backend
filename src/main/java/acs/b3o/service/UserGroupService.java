@@ -222,7 +222,7 @@ public class UserGroupService {
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
 
         String groupCode = String.valueOf(userGroupRequest.getGroupCode());
-        String taskName = "Task_" + groupCode;
+        String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
 
         // RestTemplate 준비
         RestTemplate restTemplate = new RestTemplate();
