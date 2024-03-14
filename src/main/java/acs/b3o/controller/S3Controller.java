@@ -35,10 +35,11 @@ public class S3Controller {
     return ResponseEntity.ok(awsS3Service.uploadFile(multipartFiles, subFolderPath, taskTitle));
   }
 
-  @GetMapping("/csv_download/{subFolderPath}/{fileName}")
+  @GetMapping("/csv_download/{intermediateFolderPath}/{subFolderPath}/{fileName}")
   public ResponseEntity<byte[]> download(
+      @PathVariable("intermediateFolderPath") String intermediateFolderPath,
       @PathVariable("subFolderPath") String subFolderPath,
       @PathVariable("fileName") String fileName) throws IOException {
-    return awsS3Service.getObject(subFolderPath, fileName);
+    return awsS3Service.getObject(intermediateFolderPath, subFolderPath, fileName);
   }
 }
