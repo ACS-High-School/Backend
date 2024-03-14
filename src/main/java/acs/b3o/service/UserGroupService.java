@@ -229,8 +229,12 @@ public class UserGroupService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        JSONObject inputObject = new JSONObject();
+        inputObject.put("groupCode", groupCode);
+
         // JSONObject 또는 Map을 사용하여 요청 본문 생성
         JSONObject requestJson = new JSONObject();
+        requestJson.put("input", inputObject.toString());
         requestJson.put("name", taskName);
         requestJson.put("stateMachineArn", stateMachineArn);
 
