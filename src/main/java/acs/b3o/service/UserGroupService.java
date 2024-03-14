@@ -4,14 +4,17 @@ import acs.b3o.dto.request.UserGroupRequest;
 import acs.b3o.dto.response.UserGroupResponse;
 import acs.b3o.dto.response.UserTaskStatusResponse;
 import acs.b3o.entity.FLTask;
+import acs.b3o.entity.Federated;
 import acs.b3o.entity.User;
 import acs.b3o.entity.UserGroup;
 import acs.b3o.repository.FLTaskRepository;
+import acs.b3o.repository.FederatedRepository;
 import acs.b3o.repository.UserGroupRepository;
 import acs.b3o.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,9 @@ public class UserGroupService {
 
     @Autowired
     private UserGroupRepository userGroupRepository;
+
+    @Autowired
+    private FederatedRepository federatedRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -51,6 +57,21 @@ public class UserGroupService {
         userGroup.setUser1(user);
 
         userGroupRepository.save(userGroup);
+
+        // Federated 객체 생성
+        Federated federated = Federated.builder()
+            .groupCode(userGroup) // 여기서 groupCode는 UserGroup 객체입니다.
+            .description(userGroupRequest.getDescription()) // 여기서 description은 String입니다.
+            .user1Status("notReady")
+            .user2Status("notReady")
+            .user3Status("notReady")
+            .user4Status("notReady")
+            .date(new Date()) // 현재 날짜 설정
+            .status("none")
+            .build();
+
+        // Federated 객체 저장
+        federatedRepository.save(federated);
 
         return buildResponse(userGroup, "그룹이 생성되었습니다.");
     }
