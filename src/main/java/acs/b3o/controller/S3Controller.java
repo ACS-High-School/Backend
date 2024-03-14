@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,12 +35,10 @@ public class S3Controller {
     return ResponseEntity.ok(awsS3Service.uploadFile(multipartFiles, subFolderPath, taskTitle));
   }
 
-  @Operation(summary = "파일 다운로드", description = "s3 파일을 다운로드 합니다.")
-  @GetMapping("/download")
-  public ResponseEntity<byte[]> downloadFile(
-      @RequestParam("fileName") String fileName,
-      @RequestParam("subFolderPath") String subFolderPath) throws IOException {
-    // awsS3Service의 수정된 getFile 메서드를 호출하여 파일 내용을 가져옴
-    return awsS3Service.downloadFile(fileName, subFolderPath);
+  @GetMapping("/csv_download/{subFolderPath}/{fileName}")
+  public ResponseEntity<byte[]> download(
+      @PathVariable("subFolderPath") String subFolderPath,
+      @PathVariable("fileName") String fileName) throws IOException {
+    return awsS3Service.getObject(subFolderPath, fileName);
   }
 }
