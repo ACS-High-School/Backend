@@ -171,13 +171,14 @@ public class UserGroupService {
             }
         }
 
-        Federated federated = federatedRepository.findByGroupCode(userGroupRequest.getGroupCode());
+        Federated federated = federatedRepository.findByGroupCode(userGroup);
 
         String description = federated.getDescription();
 
 
         System.out.println(fetchedUrl);
         System.out.println(userTasks);
+        System.out.println(description);
 
 
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
