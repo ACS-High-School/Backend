@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -58,6 +59,8 @@ public class UserGroupService {
 
         userGroupRepository.save(userGroup);
 
+        String uuid = UUID.randomUUID().toString();
+
         // Federated 객체 생성
         Federated federated = Federated.builder()
             .groupCode(userGroup) // 여기서 groupCode는 UserGroup 객체입니다.
@@ -68,6 +71,7 @@ public class UserGroupService {
             .user4Status("notReady")
             .date(new Date()) // 현재 날짜 설정
             .status("none")
+            .taskName("Task-"+ userGroup.getGroupCode() + "-" + uuid)
             .build();
 
         // Federated 객체 저장
@@ -150,7 +154,7 @@ public class UserGroupService {
             if (user != null) {
                 // 사용자별 고유한 taskId 생성
                 String taskIdSuffix = String.format("000%d00000001", i + 1);
-                String taskName = "FL-Task-2024-03-07-05-52-59"; // 고정된 taskName 사용
+                String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
 
                 // 데이터베이스에서 Task 정보 조회
                 FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
@@ -218,15 +222,19 @@ public class UserGroupService {
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
 
         String groupCode = String.valueOf(userGroupRequest.getGroupCode());
-        String taskName = "Task_" + groupCode;
+        String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
 
         // RestTemplate 준비
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
+        JSONObject inputObject = new JSONObject();
+        inputObject.put("groupCode", groupCode);
+
         // JSONObject 또는 Map을 사용하여 요청 본문 생성
         JSONObject requestJson = new JSONObject();
+        requestJson.put("input", inputObject.toString());
         requestJson.put("name", taskName);
         requestJson.put("stateMachineArn", stateMachineArn);
 
