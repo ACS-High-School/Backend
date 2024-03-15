@@ -36,7 +36,9 @@ public class S3Service {
   public List<String> uploadFile(List<MultipartFile> multipartFiles, String subFolderPath,
       String taskTitle) {
     List<String> fileNameList = new ArrayList<>();
-    String fullFolderPath = subFolderPath.endsWith("/") ? subFolderPath : subFolderPath + "/";
+    String newIntermediateFolder = "inference/";
+    String fullFolderPath =
+        newIntermediateFolder + (subFolderPath.endsWith("/") ? subFolderPath : subFolderPath + "/");
 
     // forEach 구문을 통해 multipartFiles 리스트로 넘어온 파일들을 순차적으로 처리
     multipartFiles.forEach(file -> {
@@ -58,11 +60,12 @@ public class S3Service {
   }
 
 
-  public ResponseEntity<byte[]> getObject(String subFolderPath, String storedFileName)
-      throws IOException {
+  public ResponseEntity<byte[]> getObject(String intermediateFolderPath, String subFolderPath,
+      String storedFileName) throws IOException {
     // 경로 결합
-    String path = (subFolderPath != null && !subFolderPath.trim().isEmpty()) ? subFolderPath + "/"
-        + storedFileName : storedFileName;
+    String path =
+        intermediateFolderPath + "/" + (subFolderPath != null && !subFolderPath.trim().isEmpty() ?
+            subFolderPath + "/" : "") + storedFileName;
 
     S3Object o = amazonS3.getObject(new GetObjectRequest(bucket, path));
     S3ObjectInputStream objectInputStream = o.getObjectContent();
