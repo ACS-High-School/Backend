@@ -154,7 +154,7 @@ public class UserGroupService {
             if (user != null) {
                 // 사용자별 고유한 taskId 생성
                 String taskIdSuffix = String.format("000%d00000001", i + 1);
-                String taskName = "FL-Task-2024-03-07-05-52-59"; // 고정된 taskName 사용
+                String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
 
                 // 데이터베이스에서 Task 정보 조회
                 FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
