@@ -19,4 +19,6 @@ public class UserGroupResponse {
     private String jupyterLabUrl;
     private String message;
     private List<UserTaskStatusResponse> userTasks;
+
+    private String description;
 }
