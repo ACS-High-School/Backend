@@ -102,10 +102,10 @@ pipeline {
     post {
         failure {
             echo 'file update failure'
-            slackSend(channel: "#jenkins", color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend(channel: "#jenkins-argo", color: '#FF0000', message: "FAILED: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
         }
         success {
-            slackSend(channel: "#jenkins", color: '#00FF00', message: "MANIFEST UPDATE SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
+            slackSend(channel: "#jenkins-argo", color: '#00FF00', message: "MANIFEST UPDATE SUCCESS: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL})")
             echo 'file update success'
         }
     }
