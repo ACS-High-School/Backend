@@ -56,6 +56,7 @@ public class UserGroupService {
         UserGroup userGroup = new UserGroup();
         userGroup.setGroupCode(userGroupRequest.getGroupCode());
         userGroup.setUser1(user);
+        userGroup.setStatus("none");
 
         userGroupRepository.save(userGroup);
 
@@ -197,6 +198,7 @@ public class UserGroupService {
             .userTasks(userTasks)
             .message("사용자 그룹 정보가 성공적으로 검색되었습니다")
             .description(description)
+            .status(userGroup.getStatus())
             .build();
     }
 
