@@ -222,6 +222,9 @@ public class UserGroupService {
 
     public UserGroupResponse startStateMachine(UserGroupRequest userGroupRequest) {
         UserGroup userGroup = userGroupRepository.findByGroupCode(userGroupRequest.getGroupCode());
+        Federated federated = federatedRepository.findByGroupCode(userGroup);
+        userGroup.setStatus("start");
+        federated.setStatus("start");
 
         String groupCode = String.valueOf(userGroupRequest.getGroupCode());
         String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
