@@ -41,7 +41,4 @@ public class UserGroup {
     @JoinColumn(name = "user4", referencedColumnName = "username")
     private User user4; // user4 username, User 엔티티와의 외래 키 관계
 
-    @Column(length = 20)
-    private String status; // 그룹 진행 상태
-
 }
