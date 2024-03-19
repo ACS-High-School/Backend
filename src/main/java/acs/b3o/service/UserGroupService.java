@@ -153,45 +153,12 @@ public class UserGroupService {
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             if (user != null) {
-                // 사용자별 고유한 taskId 생성
-                String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
+                // 'done' 상태의 태스크를 우선적으로 처리
+                boolean added = addUserTask(i, user, userGroup, userTasks, "done");
 
-                String taskIdSuffix = String.format("000%d00000001", i + 1);
-
-                // 데이터베이스에서 Task 정보 조회
-                FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
-                if (flTask != null) {
-                    System.out.println(flTask.getTaskId());
-                    // Task 정보를 바탕으로 UserTaskStatusDTO 객체 생성
-                    // 여기서 taskStatus를 'ready'로 직접 설정합니다.
-                    UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
-                        .username(user.getUsername())
-                        .taskId(flTask.getTaskId())
-                        .taskName(flTask.getTaskName())
-                        .taskStatus("ready") // DTO의 taskStatus를 'ready'로 설정
-                        .build();
-
-                    // 생성된 DTO 객체를 리스트에 추가
-                    userTasks.add(userTaskStatusResponse);
-                }
-
-                taskIdSuffix = String.format("000%d00000005", i + 1);
-
-                // 데이터베이스에서 Task 정보 조회
-                flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
-                if (flTask != null) {
-                    System.out.println(flTask.getTaskId());
-                    // Task 정보를 바탕으로 UserTaskStatusDTO 객체 생성
-                    // 여기서 taskStatus를 'ready'로 직접 설정합니다.
-                    UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
-                        .username(user.getUsername())
-                        .taskId(flTask.getTaskId())
-                        .taskName(flTask.getTaskName())
-                        .taskStatus("done") // DTO의 taskStatus를 'ready'로 설정
-                        .build();
-
-                    // 생성된 DTO 객체를 리스트에 추가
-                    userTasks.add(userTaskStatusResponse);
+                // 'done' 상태의 태스크가 없는 경우에만 'ready' 상태의 태스크를 처리
+                if (!added) {
+                    addUserTask(i, user, userGroup, userTasks, "ready");
                 }
             }
         }
@@ -235,6 +202,26 @@ public class UserGroupService {
             .description(description)
             .status(userGroup.getStatus())
             .build();
+    }
+
+    private boolean addUserTask(int userIndex, User user, UserGroup userGroup, List<UserTaskStatusResponse> userTasks, String taskStatus) {
+        String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
+        String taskIdSuffix = String.format("000%d0000000%s", userIndex + 1, taskStatus.equals("ready") ? "1" : "5");
+
+        FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
+        if (flTask != null) {
+            System.out.println(flTask.getTaskId());
+            UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
+                .username(user.getUsername())
+                .taskId(flTask.getTaskId())
+                .taskName(flTask.getTaskName())
+                .taskStatus(taskStatus)
+                .build();
+
+            userTasks.add(userTaskStatusResponse);
+            return true; // 태스크가 추가되었음을 나타내는 true 반환
+        }
+        return false; // 태스크가 추가되지 않았음을 나타내는 false 반환
     }
 
     private boolean isUserInGroup(User user, UserGroup userGroup) {
