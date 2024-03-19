@@ -154,8 +154,9 @@ public class UserGroupService {
             User user = users.get(i);
             if (user != null) {
                 // 사용자별 고유한 taskId 생성
-                String taskIdSuffix = String.format("000%d00000001", i + 1);
                 String taskName = federatedRepository.findByGroupCode(userGroup).getTaskName();
+
+                String taskIdSuffix = String.format("000%d00000001", i + 1);
 
                 // 데이터베이스에서 Task 정보 조회
                 FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
@@ -173,6 +174,25 @@ public class UserGroupService {
                     // 생성된 DTO 객체를 리스트에 추가
                     userTasks.add(userTaskStatusResponse);
                 }
+
+                taskIdSuffix = String.format("000%d00000005", i + 1);
+
+                // 데이터베이스에서 Task 정보 조회
+                flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
+                if (flTask != null) {
+                    System.out.println(flTask.getTaskId());
+                    // Task 정보를 바탕으로 UserTaskStatusDTO 객체 생성
+                    // 여기서 taskStatus를 'ready'로 직접 설정합니다.
+                    UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
+                        .username(user.getUsername())
+                        .taskId(flTask.getTaskId())
+                        .taskName(flTask.getTaskName())
+                        .taskStatus("done") // DTO의 taskStatus를 'ready'로 설정
+                        .build();
+
+                    // 생성된 DTO 객체를 리스트에 추가
+                    userTasks.add(userTaskStatusResponse);
+                }
             }
         }
 
@@ -184,6 +204,21 @@ public class UserGroupService {
         System.out.println(fetchedUrl);
         System.out.println(userTasks);
         System.out.println(description);
+
+        boolean allUsersDone = true; // 모든 사용자가 'done' 상태인지 확인하기 위한 플래그
+
+        for (UserTaskStatusResponse userTask : userTasks) {
+            if (!userTask.getTaskStatus().equals("done")) {
+                allUsersDone = false; // 하나라도 'done' 상태가 아닌 사용자가 있다면 플래그를 false로 설정
+                break; // 'done' 상태가 아닌 사용자를 발견하면 더 이상 확인할 필요가 없으므로 반복문을 종료
+            }
+        }
+
+        if (allUsersDone) {
+            // 모든 사용자의 상태가 'done'이면 userGroup의 상태를 'done'으로 설정
+            userGroup.setStatus("done");
+            userGroupRepository.save(userGroup); // 변경된 상태를 데이터베이스에 저장
+        }
 
 
         // UserGroup 엔티티에서 사용자 정보를 추출하여 UserGroupResponse 객체를 생성
