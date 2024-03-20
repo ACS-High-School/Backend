@@ -172,12 +172,13 @@ public class UserGroupService {
         System.out.println(userTasks);
         System.out.println(description);
 
-        boolean allUsersDone = true; // 모든 사용자가 'done' 상태인지 확인하기 위한 플래그
+        boolean allUsersDone = false; // 모든 사용자가 'done' 상태인지 확인하기 위한 플래그
 
         for (UserTaskStatusResponse userTask : userTasks) {
             if (!userTask.getTaskStatus().equals("done")) {
-                allUsersDone = false; // 하나라도 'done' 상태가 아닌 사용자가 있다면 플래그를 false로 설정
                 break; // 'done' 상태가 아닌 사용자를 발견하면 더 이상 확인할 필요가 없으므로 반복문을 종료
+            } else {
+                allUsersDone = true;
             }
         }
 
