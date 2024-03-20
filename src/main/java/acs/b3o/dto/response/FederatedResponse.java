@@ -16,4 +16,7 @@ public class FederatedResponse {
     private String user2Status;
     private String user3Status;
     private String user4Status;
+    private String taskName;
+
+    private String result;
 }
