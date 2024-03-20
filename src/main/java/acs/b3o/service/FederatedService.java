@@ -57,7 +57,7 @@ public class FederatedService {
                 .user2Status(federated.getUser2Status())
                 .user3Status(federated.getUser3Status())
                 .user4Status(federated.getUser4Status())
-                .result(federated.getTaskName()) // "result"는 "taskName"과 매핑되어야 한다고 가정합니다.
+                .result(federated.getTaskName() + "-output.npy") // "result"는 "taskName"과 매핑되어야 한다고 가정합니다.
                 .build()
         ).collect(Collectors.toList());
     }
