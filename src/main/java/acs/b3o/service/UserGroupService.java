@@ -185,6 +185,7 @@ public class UserGroupService {
             // 모든 사용자의 상태가 'done'이면 userGroup의 상태를 'done'으로 설정
             userGroup.setStatus("done");
             userGroupRepository.save(userGroup); // 변경된 상태를 데이터베이스에 저장
+            federated.setStatus("complete");
         }
 
 
