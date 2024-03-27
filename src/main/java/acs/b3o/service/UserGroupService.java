@@ -211,6 +211,21 @@ public class UserGroupService {
         String taskIdSuffix = String.format("000%d0000000%s", userIndex + 1, taskStatus.equals("ready") ? "1" : "5");
 
         FLTask flTask = flTaskRepository.getTaskById(taskName, taskIdSuffix);
+        System.out.println(flTask);
+
+        if (flTask == null && taskStatus.equals("ready")) {
+            UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
+                .username(user.getUsername())
+                .taskId("none")
+                .taskName("none")
+                .taskStatus("notReady")
+                .build();
+
+            userTasks.add(userTaskStatusResponse);
+            return true;
+//            return true; // 태스크가 추가되었음을 나타내는 true 반환
+        }
+
         if (flTask != null) {
             System.out.println(flTask.getTaskId());
             UserTaskStatusResponse userTaskStatusResponse = UserTaskStatusResponse.builder()
