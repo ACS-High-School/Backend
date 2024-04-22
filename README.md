@@ -11,6 +11,8 @@
 <br>
 
 ## Features
+![image](https://github.com/ACS-High-School/Backend/assets/84767822/87aba11e-bba1-4339-be9d-a4e26be6d842)
+
 ### Token Verify
 - 인증을 거친 사용자의 인가 처리
   - AWS Cognito 에서 발급 받은 토큰을 Spring Security 를 통해
